@@ -4,24 +4,43 @@ import android.net.http.SslError;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.mavoic.mavonbrowser.utils.UrlUtils;
 
 public class MainActivity extends AppCompatActivity {
 
     WebView webView;
     Toolbar toolbar;
+    EditText txtField;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         toolbar = this.findViewById(R.id.toolbar);
+        txtField = this.findViewById(R.id.editText);
+        txtField.setSingleLine(true);
+        txtField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId,
+                                          KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    webView.loadUrl(UrlUtils.checkUrl(txtField.getText().toString()));
+                }
+                return false;
+            }
+        });
 
         ImmersionBar.with(this).statusBarDarkFont(true).titleBar(findViewById(R.id.layout_toolbar)).init();
 
